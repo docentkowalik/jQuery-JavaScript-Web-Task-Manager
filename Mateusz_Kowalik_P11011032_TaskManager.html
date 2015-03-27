@@ -1,0 +1,349 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Task Manager</title>
+<style type="text/css">
+table a:link {
+	color: #666;
+	font-weight: bold;
+	text-decoration:none;}
+	
+table a:visited {
+	color: #999999;
+	font-weight:bold;
+	text-decoration:none;}
+	
+table a:active,
+table a:hover {
+	color: #bd5a35;
+	text-decoration:underline;}
+	
+table {
+	font-family:Arial, Helvetica, sans-serif;
+	color:#666;
+	font-size:12px;
+	text-shadow: 1px 1px 0px #fff;
+	background:#eaebec;
+	margin:20px;
+	border:#ccc 1px solid;
+	-moz-border-radius:3px;
+	-webkit-border-radius:3px;
+	border-radius:3px;
+	-moz-box-shadow: 0 1px 2px #d1d1d1;
+	-webkit-box-shadow: 0 1px 2px #d1d1d1;
+	box-shadow: 0 1px 2px #d1d1d1;}
+	
+table th {
+	padding:21px 25px 22px 25px;
+	border-top:1px solid #fafafa;
+	border-bottom:1px solid #e0e0e0;
+	background: #ededed;
+	background: -webkit-gradient(linear, left top, left bottom, from(#ededed), to(#ebebeb));
+	background: -moz-linear-gradient(top,  #ededed,  #ebebeb);}
+	
+table th:first-child {
+	text-align: left;
+	padding-left:20px;}
+	
+table tr:first-child th:first-child {
+	-moz-border-radius-topleft:3px;
+	-webkit-border-top-left-radius:3px;
+	border-top-left-radius:3px;}
+
+table tr:first-child th:last-child {
+	-moz-border-radius-topright:3px;
+	-webkit-border-top-right-radius:3px;
+	border-top-right-radius:3px;}
+	
+table tr {
+	text-align: center;
+	padding-left:20px;}
+	
+table tr td:first-child{
+	text-align: left;
+	padding-left:20px;
+	border-left: 0;}
+	
+table tr td {
+	padding:18px;
+	border-top: 1px solid #ffffff;
+	border-bottom:1px solid #e0e0e0;
+	border-left: 1px solid #e0e0e0;
+	background: #fafafa;
+	background: -webkit-gradient(linear, left top, left bottom, from(#fbfbfb), to(#fafafa));
+	background: -moz-linear-gradient(top,  #fbfbfb,  #fafafa);}
+	
+table tr.even td{
+	background: #f6f6f6;
+	background: -webkit-gradient(linear, left top, left bottom, from(#f8f8f8), to(#f6f6f6));
+	background: -moz-linear-gradient(top,  #f8f8f8,  #f6f6f6);}
+	
+table tr:last-child td{
+	border-bottom:0;}
+	
+table tr:last-child td:first-child{
+	-moz-border-radius-bottomleft:3px;
+	-webkit-border-bottom-left-radius:3px;
+	border-bottom-left-radius:3px;}
+	
+table tr:last-child td:last-child{
+	-moz-border-radius-bottomright:3px;
+	-webkit-border-bottom-right-radius:3px;
+	border-bottom-right-radius:3px;}
+	
+table tr:hover td{
+	background: #f2f2f2;
+	background: -webkit-gradient(linear, left top, left bottom, from(#f2f2f2), to(#f0f0f0));
+	background: -moz-linear-gradient(top,  #f2f2f2,  #f0f0f0);	}
+
+form  {
+	border-radius:10px;
+	-webkit-box-shadow: 3px 5px 20px ;
+	-moz-box-shadow: 3px 5px 20px ;
+	box-shadow: 3px 5px 20px ;
+	width:300px;
+	margin-left:55px;
+	padding:2px;
+	background-image:url(1.png);}
+
+input {
+	box-shadow:#000 3px 4px 4px ;
+	border-radius:8px;}
+
+#addButton {
+	width:100px;
+	height: 25px;
+	margin-left:175px;
+	box-shadow:#6662px 2px 2px ;
+	font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
+	font-variant:small-caps;
+	font-size:15px;}
+
+p {
+	font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
+	font-size: 20px;
+	color:#FFF;
+	margin-left:15px;}
+
+select {
+   background: transparent;
+   width: 100px;
+   padding: 3px;
+   font-size: 14px;
+   border: 2px solid #ccc;
+   border-radius:3px;
+   height: 25px;}
+</style>
+	
+	<script>
+window.onload = initListeners;				//when the page loads create new onload function
+	var allTasksArray = new Array();			//create new array variable 
+
+function initListeners()			///function which when executed will set up all the event listeners in this task
+{
+	var getData = document.getElementById('addTask');		//selecting the NEW TASK button and adding an event listener so when clicked it executes the function
+	getData.addEventListener('click', getTaskData, false);
+	
+			var addNewTask = document.getElementById('addTask');	//selecting the NEW TASK button and adding an event listener so when clicked it executes the function
+			addNewTask.addEventListener('click', addToTableWithDelete, false);
+		
+		
+			//var deleteRowData = document.getElementById('removeRow');			//listener for deleting row form the table, listener is on the button created dynamically but the Delete button is not working
+			//deleteRowData.addEventListener('click', deleteDataFromTable, false);
+		
+		
+		//sorting EventListeners
+		//using the event listeners so when one of the titles in table header is clicked it will execute the function passed to the event listener
+		
+	var sortPriority = document.getElementById('taskPrior');				//these event listeners are used fot the table sorting
+	sortPriority.addEventListener('click', sortTableByPriority, false);
+				
+			var sortDate = document.getElementById('taskDue');			//these event listeners are used fot the table sorting
+			sortDate.addEventListener('click', sortTableByDate, false);	
+						
+					var sortDescription = document.getElementById('taskDesc');				//these event listeners are used fot the table sorting
+					sortDescription.addEventListener('click', sortTableByDescription, false);
+					
+							var sortTaskID = document.getElementById('taskId');				//these event listeners are used fot the table sorting
+							sortTaskID.addEventListener('click', sortTableByID, false);
+}
+
+
+		
+			function getTaskData() //function for taking all the data form the form and placing it in the object and then pushing that object into the array
+			{		
+				
+				var tableRows 	= 	document.getElementById('taskTable').getElementsByTagName('tr').length; //code used for the table row count bu grabbing the table and checking for the lenght of the tr element
+				var fieldDesc 	= 	document.getElementById('formDescription').value;	// grabbing the value of the DESCRIPTION field in the form
+				var fieldPrior 	= 	document.getElementById('formPriority').value;		// grabbing the value of the PRIORITY field in the form
+				var fieldDate 	= 	document.getElementById('formDueDate').value;		// grabbing the value of the DATE field in the form
+				
+					var createdTask					 = new Object(); //creating an object so then all the data can be passed to it
+						createdTask.rowID 			 = tableRows;	//take the object name, create rowID variable and then assign value of the tableRows variable from the form
+						createdTask.taskDescription  = fieldDesc;	//take the object name, create taskDescription variable and then assign value of the fieldDesc variable from the form
+						createdTask.taskPriority 	 = fieldPrior;	//take the object name, create taskPriority variable and then assign value of the fieldPrior variable from the form
+						createdTask.taskDueDate 	 = fieldDate;	//take the object name, create taskDueDate variable and then assign value of the fieldDate variable from the form
+														
+								allTasksArray.push(createdTask); //getting the array by its name and then pushing an object into the array
+								
+								
+			}
+			
+					
+
+			
+			function addToTableWithDelete()//function used to create a table adding the values form the form
+			{
+					var taskTable 	= document.getElementById('tableBody'); // sellecting the tableBody because thats where the new rows will be created
+					taskTable.innerHTML ="";
+					
+					
+							for(t in allTasksArray) // for in loop to loop through the array for the t
+							{
+								var taskRow = document.createElement('tr');		//creating new table row in the tableBody and assigning it to the taskRow variable
+						
+								var newId 		= document.createElement('td');		//creating new table cell in the tableRow and assigning it to the newId variable
+								var newIdValue = document.createTextNode(allTasksArray[t].rowID); //creating new variable and then creating new text node with the value of the t in the array for the rowID
+										
+								var newDescription 		 = document.createElement('td');	//creating new table cell in the tableRow and assigning it to the newDescription variable
+								newDescriptionValue = document.createTextNode(allTasksArray[t].taskDescription);	//creating new variable and then creating new text node with the value of the t in the array for the taskDescription
+										
+								var newPriority 	  = document.createElement('td');	//creating new table cell in the tableRow and assigning it to the newPriority variable
+								newPriorityValue = document.createTextNode(allTasksArray[t].taskPriority);	//creating new variable and then creating new text node with the value of the t in the array for the taskPriority
+										
+								var newDueDate 		 = document.createElement('td');	//creating new table cell in the tableRow and assigning it to the newDueDate variable										
+								newDueDateValue = document.createTextNode(allTasksArray[t].taskDueDate);	//creating new variable and then creating new text node with the value of the t in the array for the taskDueDate
+																			
+									var newButton 	= document.createElement('td');	//creating new variable and creating new table cell for the button
+									var buttonNode 	= document.createElement('input');  // creating new input HTML element
+									buttonNode.setAttribute('type' , 'button');		//setting thet input to the type="button"
+									buttonNode.setAttribute('name' , 'removeRow');	//giving that button a name
+									buttonNode.setAttribute('value' ,'Delete');		//value Delere will be dispalyed on the button
+									newButton.appendChild(buttonNode);		//appending taht button to the table cell						
+
+                                                         
+								newId.appendChild(newIdValue);    //appending newIdValue to the newId
+								 newDescription.appendChild(newDescriptionValue); //appending  newDescriptionValue to the newDescription
+								  newPriority.appendChild(newPriorityValue);  //appending newPriorityValue to the newPriority
+									 newDueDate.appendChild(newDueDateValue);      //appending   newDueDateValue to the newDueDate                        			
+						
+									
+										taskRow.appendChild(newId);	//appending newId to the taskRow
+										taskRow.appendChild(newDescription);	//appending newDescription to the taskRow
+										taskRow.appendChild(newPriority);	//appending newPriority to the taskRow
+										taskRow.appendChild(newDueDate);	//appending newDueDate to the taskRow
+										taskRow.appendChild(buttonNode);	//appending buttonNode to the taskRow
+										
+										
+									taskTable.appendChild(taskRow);	//appending taskRow to the taskTable
+
+										}
+								}
+
+								
+
+								
+								
+
+
+
+// I used this website for sort functions working www.javascriptkit.com/javatutors/arraysort2.shtml
+function sortTableByPriority()	//sort by priority function
+{
+	allTasksArray.sort(sortFunctionByPriority);	//getting the array and then making sort function
+	addToTableWithDelete(); //calling addToTableWithDelete function so the sorted table is updated
+	alert("Soorted by Priority");
+}
+		
+function sortTableByDate()	//sort by the Date function
+{
+	allTasksArray.sort(sortFunctionByDate);	//getting the array and then making sort function
+	addToTableWithDelete();	//calling addToTableWithDelete function so the sorted table is updated
+	alert("Sorted by Date");
+}
+
+function sortTableByDescription()	//sort by Description function
+{
+	allTasksArray.sort(sortFunctionByDescription);	//getting the array and then making sort function
+	addToTableWithDelete();	//calling addToTableWithDelete function so the sorted table is updated
+	alert("Sorted by Description");
+}	
+
+function sortTableByID()	//sort by ID function
+{
+	allTasksArray.sort(sortFunctionByID);	//getting the array and then making sort function
+	addToTableWithDelete();	//calling addToTableWithDelete function so the sorted table is updated
+	alert("Sorted by ID");
+}		
+			
+				
+				function sortFunctionByPriority(l , h) // sort function by comparing two parameters l and h to which taskPriority value has been assigned
+				{
+					return l.taskPriority-h.taskPriority; //comparing these two and returning the value
+				}
+				
+				function sortFunctionByDate(j , d)//sort function by comparing two parameters j and d to which taskDueDate value has been assigned
+				{
+					var dateA = new Date(j.taskDueDate), dateB = new Date(d.taskDueDate); // creating two variables for the taskDueDate
+					return dateA - dateB;				//comparing these two and returning the value							
+				}
+				
+				function sortFunctionByDescription(z , x) // sort function by comparing two parameters z and x to which taskDescription value has been assigned
+				{
+					var descriptionA = z.taskDescription, descriptionB = x.taskDescription; // creating two variables for the taskDescription
+					
+					if(descriptionA < descriptionB) //sort string ascending
+					return -1;
+										
+					if(descriptionA > descriptionB)
+					return 1;									
+					
+					return 0; //default return value (no sorting)										
+					
+				}
+				
+				function sortFunctionByID(q , w)//sort function by comparing two parameters q and w to which rowID value has been assigned
+				{
+					var first = q.rowID , last = w.rowID ;// creating two variables for the rowID
+					return first - last;	//comparing these two and returning the value	
+							
+				}
+								
+								
+								
+								
+	</script>
+
+</head>
+
+<body>
+<form id="fillForm">
+<p><label>Task Description:</label>
+	<input id="formDescription" type="text" value=""/></p>
+
+<p><label>Task Prority:</label>
+    <select id="formPriority">
+    	<option>1</option>
+    	<option>2</option>
+    	<option>3</option>
+  	</select></p>
+    
+<p><label>Task Due Date:</label>
+	<input id="formDueDate" type="date"/></p>
+    
+<div id="button"><p><input id="addTask" type="Button" name="Button" value="New Task" /></p></div>
+</form>
+
+       <table id="taskTable">
+       		<thead id="tableHead">
+       		<th id="taskId">Task ID</th>
+            <th id="taskDesc">Description</th>
+            <th id="taskPrior">Prority</th>
+            <th id="taskDue">Due Date</th>
+            </thead>
+            <tbody id="tableBody">
+            </tbody>
+        </table>
+</body>
+</html>
